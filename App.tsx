@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Text, View, Image, StyleSheet, Button} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,7 +25,6 @@ const styles = StyleSheet.create({
 
 const Home = () => {
   const [titleText] = useState('🐇 必 Best');
-  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
