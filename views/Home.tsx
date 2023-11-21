@@ -31,15 +31,15 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{titleText}</Text>
-      {/* <Image
+      <Image
         style={styles.image}
         source={require('../assets/images/bg.png')}
         resizeMode="contain" // 控制图片的缩放模式
-      /> */}
+      />
       <View style={styles.button}>
         <Button
-          title="GO"
-          color={'red'}
+          title="GO TO TASK"
+          color={'#000'}
           onPress={() => navigation.navigate('Tasks' as never)}
         />
       </View>

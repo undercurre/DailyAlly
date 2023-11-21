@@ -1,47 +1,19 @@
-import React, {useState} from 'react';
-import {Text, View, Image, StyleSheet, Button} from 'react-native';
+import * as React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Home from './views/Home';
+import Tasks from './views/Task';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: 300, // 根据你的需求设置图片的宽度
-    height: 300, // 根据你的需求设置图片的高度
-  },
-  title: {
-    fontFamily: 'Cochin',
-    fontSize: 40,
-    color: '#000',
-    fontWeight: 'bold',
-  },
-  button: {
-    width: 300,
-  },
-});
+const Stack = createNativeStackNavigator();
 
-const Home = () => {
-  const [titleText] = useState('🐇 必 Best');
-
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{titleText}</Text>
-      <Image
-        style={styles.image}
-        source={require('./assets/images/bg.png')}
-        resizeMode="contain" // 控制图片的缩放模式
-      />
-      <View style={styles.button}>
-        <Button
-          title="GO"
-          color={'red'}
-          onPress={() => navigation.navigate('Tasks' as never)}
-        />
-      </View>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Tasks" component={Tasks} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-export default Home;
+export default App;
