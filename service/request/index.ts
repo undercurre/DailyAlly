@@ -1,10 +1,40 @@
-import { getServiceEnvConfig } from '~/.env-config';
-import { createRequest } from './request';
+// api.js
 
-const { url, proxyPattern } = getServiceEnvConfig(import.meta.env);
+import axios from 'axios';
+import {localStg} from '../../utils/storage';
 
-const isHttpProxy = import.meta.env.VITE_HTTP_PROXY === 'Y';
+const baseURL = '/strapi'; // 替换为你的API地址
 
-export const request = createRequest({ baseURL: isHttpProxy ? proxyPattern : url });
+const api = axios.create({
+  baseURL,
+  timeout: 5000, // 请求超时时间，单位毫秒
+});
 
-export const mockRequest = createRequest({ baseURL: '/mock' });
+// 请求拦截器
+api.interceptors.request.use(
+  async config => {
+    const handleConfig = {...config};
+    handleConfig.headers.Authorization = (await localStg.get('token'))
+      ? `Bearer ${localStg.get('token')}`
+      : '';
+    return config;
+  },
+  error => {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+  },
+);
+
+// 响应拦截器
+api.interceptors.response.use(
+  response => {
+    // 对响应数据做些什么
+    return response.data;
+  },
+  error => {
+    // 对响应错误做些什么
+    return Promise.reject(error);
+  },
+);
+
+export default api;

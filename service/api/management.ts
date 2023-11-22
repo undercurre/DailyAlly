@@ -1,6 +1,4 @@
-import {adapter} from '~/src/utils';
-import {request} from '../request';
-import {adapterOfFetchTaskList} from './management.adapter';
+import request from '../request';
 
 /**
 @description 获取任务列表
@@ -10,7 +8,7 @@ export const fetchTaskList = async () => {
   const data = await request.get<ApiManagement.TaskList | null>(
     '/api/projects',
   );
-  return adapter(adapterOfFetchTaskList, data);
+  return data;
 };
 
 /**
