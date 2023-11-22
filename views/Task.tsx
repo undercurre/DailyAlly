@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   StatusBar,
+  ListRenderItemInfo,
 } from 'react-native';
 
 const DATA = [
@@ -23,16 +24,14 @@ const DATA = [
   },
 ];
 
-const Item = ({title}) => {
-  return (
+const TaskScreen = () => {
+  const renderItem = ({
+    item,
+  }: ListRenderItemInfo<{id: string; title: string}>) => (
     <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>{item.title}</Text>
     </View>
   );
-};
-
-const TaskScreen = () => {
-  const renderItem = ({item}) => <Item title={item.title} />;
 
   return (
     <SafeAreaView style={styles.container}>
