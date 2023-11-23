@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,37 +8,35 @@ import {
   StatusBar,
   ListRenderItemInfo,
 } from 'react-native';
-
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-];
+import {fetchTaskList} from '../service';
 
 const TaskScreen = () => {
-  const renderItem = ({
-    item,
-  }: ListRenderItemInfo<{id: string; title: string}>) => (
+  const [taskData, setTaskData] = useState<ApiManagement.Task[]>([]);
+
+  // 在组件挂载时加载数据
+  useEffect(() => {
+    const fetchData = async () => {
+      const taskRes = await fetchTaskList();
+      if (taskRes.data) {
+        setTaskData(taskRes.data.data);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const renderItem = ({item}: ListRenderItemInfo<ApiManagement.Task>) => (
     <View style={styles.item}>
-      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.title}>{item.attributes.name}</Text>
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={DATA}
+        data={taskData}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
       />
     </SafeAreaView>
   );

@@ -3,7 +3,7 @@
 import axios from 'axios';
 import {localStg} from '../../utils/storage';
 
-const baseURL = '/strapi'; // 替换为你的API地址
+const baseURL = 'http://81.71.85.68:1337'; // 替换为你的API地址
 
 const api = axios.create({
   baseURL,
@@ -20,7 +20,7 @@ api.interceptors.request.use(
     return config;
   },
   error => {
-    // 对请求错误做些什么
+    console.log(error);
     return Promise.reject(error);
   },
 );
@@ -28,7 +28,10 @@ api.interceptors.request.use(
 // 响应拦截器
 api.interceptors.response.use(
   response => {
-    // 对响应数据做些什么
+    // 401清除token
+    if (response.data.error && response.data.error.status === 401) {
+      localStg.remove('token');
+    }
     return response.data;
   },
   error => {
