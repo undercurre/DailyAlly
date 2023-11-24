@@ -58,10 +58,10 @@ const Home = () => {
       navigation.navigate('Tasks' as never);
     } else {
       const res = await fetchLogin(username, password);
-      if ((res as unknown as Auth.Token).jwt) {
-        localStg.set('token', (res as unknown as Auth.Token).jwt);
-        localStg.set('userInfo', (res as unknown as Auth.Token).user);
-        setUserData((res as unknown as Auth.Token).user);
+      if (res.data.jwt) {
+        localStg.set('token', res.data.jwt);
+        localStg.set('userInfo', res.data.user);
+        setUserData(res.data.user);
       }
     }
   };
@@ -101,7 +101,7 @@ const Home = () => {
       </View>
       <View style={styles.button}>
         <Button
-          title={userData ? 'SUBMIT' : 'GO TO TASK'}
+          title={userData ? 'GO TO TASK' : 'SUBMIT'}
           color={'#000'}
           onPress={handleButton}
         />

@@ -15,7 +15,7 @@ api.interceptors.request.use(
   async config => {
     const handleConfig = {...config};
     handleConfig.headers.Authorization = (await localStg.get('token'))
-      ? `Bearer ${localStg.get('token')}`
+      ? `Bearer ${await localStg.get('token')}`
       : '';
     return config;
   },
@@ -32,7 +32,7 @@ api.interceptors.response.use(
     if (response.data.error && response.data.error.status === 401) {
       localStg.remove('token');
     }
-    return response.data;
+    return response;
   },
   error => {
     // 对响应错误做些什么

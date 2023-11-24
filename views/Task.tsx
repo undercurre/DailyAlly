@@ -7,27 +7,52 @@ import {
   Text,
   StatusBar,
   ListRenderItemInfo,
+  Switch,
 } from 'react-native';
-import {fetchTaskList} from '../service';
+import {fetchTaskList, fetchUpdateTask} from '../service';
 
 const TaskScreen = () => {
   const [taskData, setTaskData] = useState<ApiManagement.Task[]>([]);
 
   // 在组件挂载时加载数据
   useEffect(() => {
+    getData();
+  }, []);
+
+  function getData() {
     const fetchData = async () => {
       const taskRes = await fetchTaskList();
       if (taskRes.data) {
+        console.log(taskRes.data);
         setTaskData(taskRes.data.data);
       }
     };
 
     fetchData();
-  }, []);
+  }
+
+  const toggleSwitch = async (id: number) => {
+    const cur = taskData.find(item => item.id === id);
+    const res = await fetchUpdateTask(id, {
+      ...cur?.attributes,
+      completed: !cur?.attributes.completed,
+    });
+    if (res.data.data.id) {
+      getData();
+    }
+  };
 
   const renderItem = ({item}: ListRenderItemInfo<ApiManagement.Task>) => (
     <View style={styles.item}>
       <Text style={styles.title}>{item.attributes.name}</Text>
+      <Text style={styles.title}>{item.attributes.workTime}</Text>
+      <Switch
+        trackColor={{false: '#767577', true: '#81b0ff'}}
+        thumbColor={item.attributes.completed ? '#f5dd4b' : '#f4f3f4'}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={() => toggleSwitch(item.id)}
+        value={item.attributes.completed}
+      />
     </View>
   );
 

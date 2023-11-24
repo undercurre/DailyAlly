@@ -32,7 +32,7 @@ export const fetchUpdateTask = async (
   taskId: number,
   form: ApiManagement.UpdateTaskDto,
 ) => {
-  const data = await request.put<ApiManagement.Task>(
+  const data = await request.put<{data: ApiManagement.Task; meta: {}}>(
     `/api/projects/${taskId}`,
     {
       data: {
