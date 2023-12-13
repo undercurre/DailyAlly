@@ -10,3 +10,10 @@ export function fetchLogin(params: Auth.LoginParams) {
     params,
   );
 }
+
+/**
+ * 获取用户信息
+ */
+export function fetchUserInfo() {
+  return request.post<Service.BackConfig<Auth.UserInfo>>('/api/users/fineOne');
+}

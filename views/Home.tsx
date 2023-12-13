@@ -44,9 +44,9 @@ const Home = () => {
     const fetchData = async () => {
       const userRes = await fetchUserInfo();
       console.log('userRes', userRes);
-      if (userRes.data.id) {
-        setUserData(userRes.data);
-        localStg.set('userInfo', userRes.data);
+      if (userRes.data.data.id) {
+        setUserData(userRes.data.data);
+        localStg.set('userInfo', userRes.data.data);
       }
     };
 
@@ -59,9 +59,7 @@ const Home = () => {
     } else {
       const res = await fetchLogin({username, password});
       if (res.data) {
-        localStg.set('token', res.data.jwt);
-        localStg.set('userInfo', res.data.user);
-        setUserData(res.data.user);
+        localStg.set('token', res.data.data.data.access_token);
       }
     }
   };
