@@ -8,7 +8,7 @@ const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
  */
 const config = {
   server: {
-    port: 9020,
+    port: 9010,
   },
 };
 

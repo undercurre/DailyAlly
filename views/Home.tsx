@@ -57,8 +57,8 @@ const Home = () => {
     if (userData) {
       navigation.navigate('Tasks' as never);
     } else {
-      const res = await fetchLogin(username, password);
-      if (res.data.jwt) {
+      const res = await fetchLogin({username, password});
+      if (res.data) {
         localStg.set('token', res.data.jwt);
         localStg.set('userInfo', res.data.user);
         setUserData(res.data.user);

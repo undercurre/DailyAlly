@@ -3,7 +3,7 @@
 import axios from 'axios';
 import {localStg} from '../../utils/storage';
 
-const baseURL = 'http://81.71.85.68:1337'; // 替换为你的API地址
+const baseURL = 'http://81.71.85.68:9111'; // 替换为你的API地址
 
 const api = axios.create({
   baseURL,
@@ -32,7 +32,7 @@ api.interceptors.response.use(
     if (response.data.error && response.data.error.status === 401) {
       localStg.remove('token');
     }
-    return response;
+    return response.data;
   },
   error => {
     // 对响应错误做些什么
