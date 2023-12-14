@@ -43,10 +43,9 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       const userRes = await fetchUserInfo();
-      console.log('userRes', userRes);
-      if (userRes.data.data.id) {
-        setUserData(userRes.data.data);
-        localStg.set('userInfo', userRes.data.data);
+      if (userRes.data.id) {
+        setUserData(userRes.data);
+        localStg.set('userInfo', userRes.data);
       }
     };
 
@@ -59,7 +58,12 @@ const Home = () => {
     } else {
       const res = await fetchLogin({username, password});
       if (res.data) {
-        localStg.set('token', res.data.data.data.access_token);
+        localStg.set('token', res.data.data.access_token);
+        const userRes = await fetchUserInfo();
+        if (userRes.data.id) {
+          setUserData(userRes.data);
+          localStg.set('userInfo', userRes.data);
+        }
       }
     }
   };
@@ -82,17 +86,19 @@ const Home = () => {
             <TextInput
               underlineColorAndroid="black"
               style={styles.textInput}
-              placeholder="邮箱"
+              placeholder="用户名"
+              color={'#000'}
               value={username}
-              onChangeText={text => setUsername(text)}
+              onChangeText={(text: string) => setUsername(text)}
             />
             <TextInput
               underlineColorAndroid="black"
               style={styles.textInput}
               placeholder="密码"
+              color={'#000'}
               secureTextEntry={true}
               value={password}
-              onChangeText={text => setPassword(text)}
+              onChangeText={(text: string) => setPassword(text)}
             />
           </View>
         )}

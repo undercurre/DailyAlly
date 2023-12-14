@@ -9,10 +9,10 @@ import {
   ListRenderItemInfo,
   Switch,
 } from 'react-native';
-import {fetchTaskList, fetchUpdateTask} from '../service';
+import {getTaskListByUser, editTask} from '../service';
 
 const TaskScreen = () => {
-  const [taskData, setTaskData] = useState<ApiManagement.Task[]>([]);
+  const [taskData, setTaskData] = useState<Task.Entity[]>([]);
 
   // 在组件挂载时加载数据
   useEffect(() => {
@@ -21,37 +21,38 @@ const TaskScreen = () => {
 
   function getData() {
     const fetchData = async () => {
-      const taskRes = await fetchTaskList();
+      const taskRes = await getTaskListByUser();
       if (taskRes.data) {
-        console.log(taskRes.data);
-        setTaskData(taskRes.data.data);
+        setTaskData(taskRes.data);
       }
     };
 
     fetchData();
   }
 
-  const toggleSwitch = async (id: number) => {
-    const cur = taskData.find(item => item.id === id);
-    const res = await fetchUpdateTask(id, {
-      ...cur?.attributes,
-      completed: !cur?.attributes.completed,
-    });
-    if (res.data.data.id) {
-      getData();
+  const toggleSwitch = async (id: string) => {
+    const cur = taskData.find((item: Task.Entity) => item.id === id);
+    if (cur) {
+      cur as Task.Entity;
+      const res = await editTask(id, {
+        status: cur.status === 'Done' ? 'In Progress' : 'Done',
+      });
+      if (res.data.id) {
+        getData();
+      }
     }
   };
 
-  const renderItem = ({item}: ListRenderItemInfo<ApiManagement.Task>) => (
+  const renderItem = ({item}: ListRenderItemInfo<Task.Entity>) => (
     <View style={styles.item}>
-      <Text style={styles.title}>{item.attributes.name}</Text>
-      <Text style={styles.title}>{item.attributes.workTime}</Text>
+      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.title}>{item.due_date}</Text>
       <Switch
         trackColor={{false: '#767577', true: '#81b0ff'}}
-        thumbColor={item.attributes.completed ? '#f5dd4b' : '#f4f3f4'}
+        thumbColor={item.status === 'Done' ? '#f5dd4b' : '#f4f3f4'}
         ios_backgroundColor="#3e3e3e"
         onValueChange={() => toggleSwitch(item.id)}
-        value={item.attributes.completed}
+        value={item.status === 'Done'}
       />
     </View>
   );
@@ -61,7 +62,7 @@ const TaskScreen = () => {
       <FlatList
         data={taskData}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item: Task.Entity) => item.id}
       />
     </SafeAreaView>
   );

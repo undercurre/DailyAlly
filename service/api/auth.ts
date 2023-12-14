@@ -1,3 +1,4 @@
+import { md5 } from 'js-md5';
 import request from '../request';
 /**
  * 登录
@@ -5,9 +6,9 @@ import request from '../request';
  * @param password - 密码
  */
 export function fetchLogin(params: Auth.LoginParams) {
-  return request.post<Service.BackConfig<Auth.LoginRes>>(
-    '/api/auth/local',
-    params,
+  return request.post<Auth.LoginRes>(
+    '/auth/login',
+    {...params, password: md5(params.password)},
   );
 }
 
@@ -15,5 +16,5 @@ export function fetchLogin(params: Auth.LoginParams) {
  * 获取用户信息
  */
 export function fetchUserInfo() {
-  return request.post<Service.BackConfig<Auth.UserInfo>>('/api/users/fineOne');
+  return request.get<Auth.UserInfo>('/users/fineOne');
 }

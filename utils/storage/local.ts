@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {decrypt, encrypt} from '../crypto';
+// import {decrypt, encrypt} from '../crypto';
 interface StorageData<T> {
   value: T;
   expire: number | null;
@@ -20,7 +20,7 @@ function createLocalStorage<
       value,
       expire: expire !== null ? new Date().getTime() + expire * 1000 : null,
     };
-    const json = encrypt(storageData);
+    const json = JSON.stringify(storageData);
     AsyncStorage.setItem(key as string, json);
   }
 
@@ -29,7 +29,7 @@ function createLocalStorage<
     if (json) {
       let storageData: StorageData<T[K]> | null = null;
       try {
-        storageData = decrypt(json);
+        storageData = JSON.parse(json);
       } catch {
         // 防止解析失败
       }
